@@ -1,0 +1,17 @@
+
+# HubSpot config file (contains sensitive keys)
+hubspot.config.yml
+
+# Backup folders
+*-backup/
+*backup/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo

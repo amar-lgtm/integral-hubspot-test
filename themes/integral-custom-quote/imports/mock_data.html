@@ -1,0 +1,70 @@
+{#
+  Mock Data Documentation
+  
+  NOTE: HubSpot quote templates automatically receive data from the `template_data` 
+  global variable when viewing actual quotes. You don't need to manually import mock data.
+  
+  When previewing templates in Design Manager, HubSpot provides sample data automatically.
+  
+  Available Variables in Quote Templates:
+  ========================================
+  
+  template_data.quote - The main quote object containing:
+    - hs_object_id: Quote ID
+    - hs_title: Quote title
+    - hs_createdate: Creation date
+    - hs_expiration_date: Expiration date
+    - hs_currency: Currency code (e.g., 'USD', 'EUR')
+    - hs_locale: Locale string (e.g., 'en', 'de')
+    - hs_status: Quote status
+    - hs_terms: Terms and conditions text
+    
+  template_data.quote.associated_objects - Associated data:
+    - deal: Associated deal object
+      - dealname: Deal name
+      - amount: Deal amount
+      - closedate: Expected close date
+      
+    - company: Associated company
+      - name: Company name
+      - address: Street address
+      - city: City
+      - state: State/Province
+      - zip: Postal code
+      - hs_avatar_filemanager_key: Company logo URL
+      
+    - contact: Primary contact
+      - firstname: First name
+      - lastname: Last name
+      - email: Email address
+      
+    - line_items: Array of line items
+      - name: Item name
+      - description: Item description
+      - quantity: Quantity
+      - price: Unit price
+      - amount: Total (quantity × price)
+      - discount: Discount amount
+      
+    - totals: Calculated totals
+      - subtotal: Sum before tax/discounts
+      - total_discounts: Total discount amount
+      - total_taxes: Total tax amount
+      - total: Final total
+      
+  Useful HubL Filters:
+  ====================
+  - |format_currency(currency_code, locale) - Format as currency
+  - |datetimeformat('%B %d, %Y') - Format dates
+  - |default('fallback') - Provide fallback value
+  
+  Example Usage:
+  ==============
+  {% set QUOTE = template_data.quote %}
+  {% set COMPANY = QUOTE.associated_objects.company %}
+  {{ COMPANY.name }}
+  {{ QUOTE.associated_objects.totals.total|format_currency(QUOTE.hs_currency, QUOTE.hs_locale) }}
+  
+  For more information, see:
+  https://developers.hubspot.com/docs/reference/cms/hubl/quote-variables
+#}

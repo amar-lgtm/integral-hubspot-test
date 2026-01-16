@@ -1,0 +1,27 @@
+name: Deploy to HubSpot
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'themes/**'
+      - '.github/workflows/deploy-to-hubspot.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: HubSpot Deploy Action
+        uses: HubSpot/hubspot-cms-deploy-action@v2.1.0
+        with:
+          src_dir: themes/integral-custom-quote
+          dest_dir: themes/integral-custom-quote
+          # Prefer GitHub Variable HUBSPOT_ACCOUNT_ID, but allow secret fallback / legacy name
+          account_id: ${{ vars.HUBSPOT_ACCOUNT_ID || secrets.HUBSPOT_ACCOUNT_ID || secrets.HUBSPOT_PORTAL_ID }}
+          personal_access_key: ${{ secrets.HUBSPOT_PERSONAL_ACCESS_KEY }}

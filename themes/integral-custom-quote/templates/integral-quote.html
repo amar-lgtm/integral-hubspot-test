@@ -1,0 +1,145 @@
+<!-- templateType: quote -->
+<!-- isAvailableForNewContent: true -->
+<!-- label: Dynamic Quote Template -->
+
+{# Quote Data Variables - HubSpot automatically populates template_data for quotes #}
+{% set QUOTE = template_data.quote %}
+{% set DEAL = QUOTE.associated_objects.deal %}
+{% set COMPANY = QUOTE.associated_objects.company %}
+{% set LINE_ITEMS = QUOTE.associated_objects.line_items %}
+{% set TOTALS = QUOTE.associated_objects.totals %}
+{% set CURRENCY = QUOTE.hs_currency|default('USD') %}
+{% set LOCALE = QUOTE.hs_locale|default('en') %}
+
+<!DOCTYPE html>
+<html lang="{{ LOCALE }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quote #{{ QUOTE.hs_object_id }} - {{ COMPANY.name }}</title>
+  {{ standard_header_includes }}
+  <link rel="stylesheet" href="{{ get_asset_url('../styles/dynamic-quote.css') }}" />
+</head>
+<body class="quote-page">
+  <div class="quote-container">
+    <!-- Header Section -->
+    <header class="quote-header">
+      <div class="header-content">
+        {% if COMPANY.hs_avatar_filemanager_key %}
+          <img src="{{ COMPANY.hs_avatar_filemanager_key }}" alt="{{ COMPANY.name }}" class="company-logo" />
+        {% endif %}
+        <div class="header-info">
+          <h1 class="quote-title">Quote for {{ COMPANY.name }}</h1>
+          {% if DEAL.dealname %}
+            <p class="deal-name">Deal: {{ DEAL.dealname }}</p>
+          {% endif %}
+        </div>
+      </div>
+      <div class="quote-meta">
+        <p><strong>Quote #:</strong> {{ QUOTE.hs_object_id }}</p>
+        {% if QUOTE.hs_createdate %}
+          <p><strong>Date:</strong> {{ QUOTE.hs_createdate|datetimeformat('%B %d, %Y') }}</p>
+        {% endif %}
+        {% if QUOTE.hs_expiration_date %}
+          <p><strong>Expires:</strong> {{ QUOTE.hs_expiration_date|datetimeformat('%B %d, %Y') }}</p>
+        {% endif %}
+      </div>
+    </header>
+
+    <!-- Company Information -->
+    <section class="company-info">
+      <div class="info-block">
+        <h3>Bill To:</h3>
+        <p>{{ COMPANY.name }}</p>
+        {% if COMPANY.address %}
+          <p>{{ COMPANY.address }}</p>
+        {% endif %}
+        {% if COMPANY.city and COMPANY.state %}
+          <p>{{ COMPANY.city }}, {{ COMPANY.state }} {{ COMPANY.zip }}</p>
+        {% endif %}
+      </div>
+    </section>
+
+    <!-- Line Items Section -->
+    <section class="line-items-section">
+      <h2>Line Items</h2>
+      <table class="line-items-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if LINE_ITEMS %}
+            {% for item in LINE_ITEMS %}
+              <tr>
+                <td>{{ item.name|default('N/A') }}</td>
+                <td>{{ item.description|default('') }}</td>
+                <td class="text-center">{{ item.quantity|default(0) }}</td>
+                <td class="text-right">{{ item.price|format_currency(CURRENCY, LOCALE) }}</td>
+                <td class="text-right">{{ item.amount|format_currency(CURRENCY, LOCALE) }}</td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="5" class="text-center">No line items found</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Totals Section -->
+    <section class="totals-section">
+      <div class="totals-wrapper">
+        <div class="totals-row">
+          <span class="label">Subtotal:</span>
+          <span class="value">{{ TOTALS.subtotal|format_currency(CURRENCY, LOCALE) }}</span>
+        </div>
+        {% if TOTALS.total_taxes %}
+          <div class="totals-row">
+            <span class="label">Tax:</span>
+            <span class="value">{{ TOTALS.total_taxes|format_currency(CURRENCY, LOCALE) }}</span>
+          </div>
+        {% endif %}
+        {% if TOTALS.total_discounts %}
+          <div class="totals-row discount">
+            <span class="label">Discount:</span>
+            <span class="value">-{{ TOTALS.total_discounts|format_currency(CURRENCY, LOCALE) }}</span>
+          </div>
+        {% endif %}
+        <div class="totals-row total">
+          <span class="label">Total:</span>
+          <span class="value">{{ TOTALS.total|format_currency(CURRENCY, LOCALE) }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Terms and Conditions -->
+    {% if QUOTE.hs_terms %}
+      <section class="terms-section">
+        <h3>Terms & Conditions</h3>
+        <div class="terms-content">
+          {{ QUOTE.hs_terms }}
+        </div>
+      </section>
+    {% endif %}
+
+    <!-- Signature Section -->
+    <section class="signature-section">
+      {% module "signature" path="@hubspot/quote_signature" %}
+    </section>
+
+    <!-- Download Section -->
+    <section class="download-section">
+      {% module "download" path="@hubspot/quote_download" %}
+    </section>
+  </div>
+
+  {{ standard_footer_includes }}
+</body>
+</html>

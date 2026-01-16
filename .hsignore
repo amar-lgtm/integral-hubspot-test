@@ -1,0 +1,43 @@
+# HubSpot ignore file - controls what gets uploaded to HubSpot
+# Files matching these patterns will NOT be uploaded
+
+# Documentation files
+README.md
+*.md
+
+# Git files
+.git/
+.gitignore
+
+# Config files (already in HubSpot)
+hubspot.config.yml
+
+# Node modules (if any)
+node_modules/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test files
+*.test.*
+*.spec.*
+__tests__/
+
+# Build artifacts (if any)
+dist/
+build/
+*.min.js
+*.min.css
+
