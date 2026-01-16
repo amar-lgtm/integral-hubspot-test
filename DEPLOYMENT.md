@@ -157,3 +157,8 @@ If something goes wrong:
 - HubSpot CLI Docs: https://developers.hubspot.com/docs/cms/developer-reference/local-development-cli
 - HubSpot Design Manager: https://app.hubspot.com/design-manager
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> a803340 (inital commit)
