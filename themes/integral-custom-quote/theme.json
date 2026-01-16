@@ -1,0 +1,15 @@
+{
+  "name": "integral-custom-quote",
+  "label": "Integral Custom Quote",
+  "version": "1.0.0",
+  "author": "Integral",
+  "screenshot_path": "./images/screenshot.png",
+  "documentation_url": "",
+  "license": "",
+  "responsive": true,
+  "asset_paths": [
+    "./styles",
+    "./images"
+  ]
+}
+
